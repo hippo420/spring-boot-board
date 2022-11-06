@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.board.mapper.BoardMapper">
+	<select id="lstBoard" resultType="com.example.board.dto.BoardDto">
+		<![CDATA[
+			SELECT
+				board_idx,
+				title,
+				hit_cnt,
+				DATE_FORMAT(created_ymd, '%Y.%m.%d %H:%i:%s') AS created_ymd
+			FROM
+				board
+			WHERE
+				deleted_yn = 'N'
+			ORDER BY board_idx DESC
+		]]>
+	</select>
+	
+	<insert id="insBoard" parameterType="com.example.board.dto.BoardDto" useGeneratedKeys="true" keyProperty="board_idx">
+		<![CDATA[
+			INSERT INTO board
+			(
+				title, 
+				contents, 
+				created_ymd,
+				creator_id
+			) 
+			VALUES 
+			(
+				#{title}, 
+				#{contents}, 
+				NOW(), 
+				'admin'			
+			)
+		]]>
+	</insert>
+	
+	<select id="lstDtlBoard" parameterType="int" resultType="com.example.board.dto.BoardDto">
+		<![CDATA[
+			SELECT
+				board_idx,
+				title,
+				contents,
+				hit_cnt,
+				DATE_FORMAT(created_ymd, '%Y.%m.%d %H:%i:%s') AS created_ymd,
+				creator_id
+			FROM
+				board
+			WHERE
+				board_idx = #{board_idx}
+				AND deleted_yn = 'N'
+		]]>
+	</select>
+	
+	<update id="updHitCnt" parameterType="int">
+		<![CDATA[
+			UPDATE 
+				board
+			SET 
+				hit_cnt = hit_cnt + 1 
+			WHERE 
+				board_idx = #{board_idx}
+		]]>
+	</update>
+	
+	<update id="updBoard" parameterType="com.example.board.dto.BoardDto">
+		<![CDATA[
+			UPDATE board SET
+				title = #{title},
+				contents = #{contents},
+				updated_ymd = Now(),
+				updater_id = 'admin'
+			WHERE 
+				board_idx = #{board_idx}
+		]]>
+	</update>
+	
+	<update id="delBoard" parameterType="int">
+		<![CDATA[
+			UPDATE board SET
+				deleted_yn = 'Y',
+				updated_ymd = Now(),
+				updater_id = 'admin'
+			WHERE 
+				board_idx = #{board_idx}
+		]]>
+	</update>
+</mapper>
