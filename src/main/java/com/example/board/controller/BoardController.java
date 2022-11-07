@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -41,8 +42,8 @@ public class BoardController {
 
     //글쓰기시 입력메소드
    @RequestMapping("board/insBoard")
-    public String insBoard(BoardDto boardDto) throws Exception{
-        iBoardService.insBoard(boardDto);
+    public String insBoard(BoardDto boardDto, MultipartHttpServletRequest multipartHttpServletRequest) throws Exception{
+        iBoardService.insBoard(boardDto, multipartHttpServletRequest);
         return "redirect:/board/list";
     }
 

@@ -43,7 +43,10 @@
 			</table>
 			<input type="hidden" id="board_idx" name="board_idx" th:value="${board.board_idx }">
 		</form>
-		
+		<div class="file_list">
+			<a th:each="list : ${board.boardFileDtoList}" th:text="|${list.original_file_name} (${list.file_size} kb)|"></a>
+		</div>
+
 		<a href="#this" id="list" class="btn">목록으로</a>
 		<a href="#this" id="edit" class="btn">수정하기</a>
 		<a href="#this" id="delete" class="btn">삭제하기</a>

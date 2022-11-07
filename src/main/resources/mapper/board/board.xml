@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.board.mapper.BoardMapper">
-	<select id="lstBoard" resultType="com.example.board.dto.BoardDto">
+	<select id="lstBoard" resultType="com.example.board.dto.BoardDto" >
 		<![CDATA[
 			SELECT
 				board_idx,
@@ -86,4 +86,59 @@
 				board_idx = #{board_idx}
 		]]>
 	</update>
+
+	<insert id="insBoardFile" parameterType="com.example.board.dto.BoardFileDto">
+		<![CDATA[
+			INSERT INTO file
+			(
+				board_idx,
+				original_file_name,
+				stored_file_path,
+				file_size,
+				creator_id,
+				created_ymd
+			)
+			VALUES
+		]]>
+		<foreach collection="list" item="item" separator=",">
+			(
+			#{item.board_idx},
+			#{item.original_file_name},
+			#{item.stored_file_path},
+			#{item.file_size},
+			'admin',
+			NOW()
+			)
+		</foreach>
+	</insert>
+
+	<select id="lstBoardFile" parameterType="int" resultType="com.example.board.dto.BoardFileDto">
+		<![CDATA[
+			SELECT
+				idx,
+				board_idx,
+				original_file_name,
+				ROUND(file_size / 1024) AS file_size
+			FROM
+				file
+			WHERE
+				board_idx = #{board_idx}
+				AND deleted_yn = 'N'
+		]]>
+	</select>
+
+	<select id="lstBoardFileInfo" parameterType="map" resultType="com.example.board.dto.BoardFileDto">
+		<![CDATA[
+			SELECT
+				original_file_name,
+				stored_file_path,
+				file_size
+			FROM
+				file
+			WHERE
+				idx = #{idx}
+				AND board_idx = #{board_idx}
+				AND deleted_yn = 'N'
+		]]>
+	</select>
 </mapper>
